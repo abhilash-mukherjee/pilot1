@@ -11,6 +11,9 @@ public class SessionManager : MonoBehaviour
     private string getCurrentSessionUrl;
     [SerializeField]
     TMPro.TextMeshProUGUI text;
+    [SerializeField]
+    [Range(0, 1)]
+    private float timeScale = 1;
     void Start()
     {
         StartCoroutine(RecursiveCoroutine());
@@ -18,7 +21,7 @@ public class SessionManager : MonoBehaviour
 
     IEnumerator RecursiveCoroutine()
     {
-        yield return new WaitForSeconds(6.0f);
+        yield return new WaitForSecondsRealtime(6.0f);
         GetRequest(getCurrentSessionUrl);
         yield return StartCoroutine(RecursiveCoroutine());
     }
@@ -48,6 +51,11 @@ public class SessionManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private void Update()
+    {
+        Time.timeScale = timeScale;
     }
 }
 
