@@ -7,6 +7,10 @@ public class SessionManager : MonoBehaviour
 {
     public delegate void SessionDataHandler(SessionData data);
     public static event SessionDataHandler onSessionStarted, onSessionPaused, onSessionResumed, onSessionEnded;
+    [SerializeField]
+    private string getCurrentSessionUrl;
+    [SerializeField]
+    TMPro.TextMeshProUGUI text;
     void Start()
     {
         StartCoroutine(RecursiveCoroutine());
@@ -15,7 +19,7 @@ public class SessionManager : MonoBehaviour
     IEnumerator RecursiveCoroutine()
     {
         yield return new WaitForSeconds(6.0f);
-        GetRequest("http://localhost:3000/current-session");
+        GetRequest(getCurrentSessionUrl);
         yield return StartCoroutine(RecursiveCoroutine());
     }
 
@@ -40,6 +44,7 @@ public class SessionManager : MonoBehaviour
             case UnityWebRequest.Result.Success:
                 {
                     Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
+                    text.text = webRequest.downloadHandler.text;
                 }
                 break;
         }
