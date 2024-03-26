@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55efc30569108d54da6450ed3fbe40fe, type: 3}
   m_Name: Game Config
   m_EditorClassIdentifier: 
-  _sessionStartDelay: 20
+  _sessionStartDelay: 10
+  _calibrationTime: 10
   _postSessionEndResetTime: 20
-  _getCurrentSessionFromServerInterval: 11
-  _hTTPRequestURL: https://dev-pilot-server.penguinlabs.in/
+  _getCurrentSessionFromServerInterval: 6
+  _hTTPGetCurrentSessionRequestURL: https://dev-pilot-server.penguinlabs.in/current-session
+  _hTTPEndSessionRequestURL: https://dev-pilot-server.penguinlabs.in/end-session

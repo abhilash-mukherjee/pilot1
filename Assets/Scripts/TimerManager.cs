@@ -6,6 +6,9 @@ public class TimerManager : MonoBehaviour
 {
     public delegate void TimerEndHandler(SessionData data);
     public static event TimerEndHandler OnTimerEnd;
+    
+    public delegate void TickHandler(SessionParams sessionParams, int timeLeft);
+    public static event TickHandler OnTimerTicked;
 
     [SerializeField]
     private GameConfig gameConfig;
@@ -45,7 +48,7 @@ public class TimerManager : MonoBehaviour
         {
             Debug.Log("A new session is paused while old timer running");
             _currentSessionData = data;
-            _timeLeft = data.duration;
+            _timeLeft = data.sessionParams.duration;
         }
         StopAllCoroutines();
         PauseTimer();
@@ -57,7 +60,7 @@ public class TimerManager : MonoBehaviour
         {
             Debug.Log("A new session is trying to be resumed while old timer running");
             _currentSessionData = data;
-            _timeLeft = data.duration;
+            _timeLeft = data.sessionParams.duration;
         }
         StopAllCoroutines();
         ResumeTimer();
@@ -66,9 +69,9 @@ public class TimerManager : MonoBehaviour
     private void NewSessionCreated(SessionData data)
     {
         _currentSessionData = data;
-        _timeLeft = data.duration;
+        _timeLeft = data.sessionParams.duration;
         StopAllCoroutines();
-        StartCoroutine(StartTimer(data.duration));
+        StartCoroutine(StartTimer(data.sessionParams.duration));
     }
 
     IEnumerator StartTimer(int sessionDuration)
@@ -80,28 +83,19 @@ public class TimerManager : MonoBehaviour
     private void TickTimer()
     {
         _timeLeft -= 1;
+        OnTimerTicked?.Invoke(_currentSessionData.sessionParams, (int)_timeLeft);
         if (_timeLeft <= 0)
         {
-            _timeLeft = 0;
-            PauseTimer();
-            OnTimerEnd?.Invoke(_currentSessionData);
+            EndTimer();
         }
     }
-
     private void PauseTimer()
     {
         _isRunning = false;
         Debug.Log("Timer paused");
         CancelInvoke(nameof(TickTimer));
     }
-    private void ResetTimer()
-    {
-        _isRunning = false;
-        _timeLeft = 0;
-        Debug.Log("Timer reset");
-        CancelInvoke(nameof(TickTimer));
-    }
-    
+
     private void ResumeTimer()
     {
         if (_isRunning) return;
@@ -109,4 +103,20 @@ public class TimerManager : MonoBehaviour
         Debug.Log("Timer Resumed");
         InvokeRepeating(nameof(TickTimer), 1, 1);
     }
+
+    private void ResetTimer()
+    {
+        _isRunning = false;
+        _timeLeft = 0;
+        Debug.Log("Timer reset");
+        CancelInvoke(nameof(TickTimer));
+    }
+
+    private void EndTimer()
+    {
+        _timeLeft = 0;
+        PauseTimer();
+        OnTimerEnd?.Invoke(_currentSessionData);
+    }
+
 }

@@ -5,14 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public class SessionParams
 {
-    public int var1;
+    public int duration;
+    public int cubeGap;
+    public int speed;
+    public string targetSide;
+    public int rightOffsetCentimeters;
+    public int leftOffsetCentimeters;
+    public bool isSitting;
+    public int cubeScaleDecimeters;
 }
 
 [System.Serializable]
 public class SessionData
 {
     public string module;
-    public int duration;
     public string code;
     public SessionParams sessionParams;
     public string sessionStatus;

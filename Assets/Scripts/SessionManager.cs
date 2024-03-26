@@ -127,9 +127,7 @@ public class SessionManager : MonoBehaviour
                     Debug.Log("Mega Log:\n" +
                                 "Received: " + webRequest.downloadHandler.text + "\n" +
                                 "Module: " + responseData.sessionData.module + "\n" +
-                                "Duration: " + responseData.sessionData.duration + "\n" +
-                                "Code: " + responseData.sessionData.code + "\n" +
-                                "Var1: " + responseData.sessionData.sessionParams.var1
+                                "Code: " + responseData.sessionData.code + "\n" 
                              );
 
 
@@ -162,7 +160,6 @@ public class SessionManager : MonoBehaviour
     private void ResetSessionData()
     {
         _sessionData.code = "";
-        _sessionData.duration = 0;
         _sessionData.sessionParams = null;
         _sessionData.sessionStatus = "";
         _sessionData.module = "";
