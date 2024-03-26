@@ -6,7 +6,7 @@ public class PlayerCalibrator : MonoBehaviour
 {
     [SerializeField] private GameConfig gameConfig;
     [SerializeField] private Vector3Data playerMeanPosition;
-    private List<Vector3>_headPositions;
+    private List<Vector3> _headPositions;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class PlayerCalibrator : MonoBehaviour
     {
         SessionManager.OnNewSessionCreated += Calibrate;
     }
-    
+
     private void OnDisable()
     {
         SessionManager.OnNewSessionCreated -= Calibrate;
@@ -24,18 +24,16 @@ public class PlayerCalibrator : MonoBehaviour
 
     private void Calibrate(SessionData data)
     {
-        if (data.sessionParams.isSitting)
-        {
-            _headPositions.Clear();
-            Debug.Log("Calibration started");
-            StartCoroutine(CollectHeadPositionCoroutine(gameConfig.CalibrationTime));
-        }
+        _headPositions.Clear();
+        Debug.Log("Calibration started");
+        StartCoroutine(CollectHeadPositionCoroutine(gameConfig.CalibrationTime));
+
     }
 
     IEnumerator CollectHeadPositionCoroutine(int calibrationSecs)
     {
         int time = 0;
-        while(time < calibrationSecs)
+        while (time < calibrationSecs)
         {
             _headPositions.Add(Camera.main.transform.position);
             Debug.Log("Positoon colledcted");

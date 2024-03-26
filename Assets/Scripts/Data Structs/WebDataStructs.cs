@@ -11,7 +11,7 @@ public class SessionParams
     public string targetSide;
     public int rightOffsetCentimeters;
     public int leftOffsetCentimeters;
-    public bool isSitting;
+    public bool isStanding;
     public int cubeScaleDecimeters;
 }
 
