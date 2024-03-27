@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CubeController : MonoBehaviour
 {
+    public delegate void CubeCollisionEventHandler(TargetSide side, EventType eventType);
+    public static event CubeCollisionEventHandler OnCubeCollided;
     [SerializeField] private GameObject cubeModel;
     [SerializeField] private Vector3Data meanPosition;
     private TargetSide _targetSide;
@@ -65,13 +67,15 @@ public class CubeController : MonoBehaviour
     }
     public void OnCubeHitPlayer()
     {
-        Debug.Log("**********Hit");
+        Debug.Log("Hit");
+        OnCubeCollided?.Invoke(_targetSide, EventType.HIT);
     }
 
     public void OnCubeHitWall()
     {
 
-        Debug.Log("**********Dodged");
+        Debug.Log("Dodged");
+        OnCubeCollided?.Invoke(_targetSide, EventType.DODGED);
     }
 
 }
