@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubeModel: {fileID: 5457254360970240531}
   meanPosition: {fileID: 11400000, guid: b447a61435e4f534fa0d8a9105e26686, type: 2}
-  isStanding: 0
+  zThresholdForStoppingModification: {fileID: 11400000, guid: ee484dec568e0ec4dbeb90884edee3e2, type: 2}
 --- !u!54 &1497477829526626006
 Rigidbody:
   m_ObjectHideFlags: 0

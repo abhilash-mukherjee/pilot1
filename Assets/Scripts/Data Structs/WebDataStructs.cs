@@ -13,6 +13,9 @@ public class SessionParams
     public int leftOffsetCentimeters;
     public bool isStanding;
     public int cubeScaleDecimeters;
+    public int spawningDistanceMetres;
+    public int spawnHeightDecimetres;
+    public int zThresholdInMetres;
 }
 
 [System.Serializable]

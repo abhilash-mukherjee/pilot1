@@ -3,7 +3,6 @@
 public class CubeSpawnManager : MonoBehaviour
 {
     [SerializeField] CubeController cubeController;
-    [SerializeField] private Transform cubeOrigin;
     private int spawnDelay = 3;
     private TargetSide _lastTargetedSide = TargetSide.LEFT;
     private void OnEnable()
@@ -30,7 +29,7 @@ public class CubeSpawnManager : MonoBehaviour
     private void SpawnCube(SessionParams sessionParams)
     {
         var spawnnedCube = Instantiate(cubeController, transform.position, Quaternion.identity);
-        spawnnedCube.InitiateCube(sessionParams, GettargetSide(sessionParams), cubeOrigin.position);
+        spawnnedCube.InitiateCube(sessionParams, GettargetSide(sessionParams));
     }
 
     private TargetSide GettargetSide(SessionParams sessionParams)

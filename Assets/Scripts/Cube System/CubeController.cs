@@ -8,25 +8,30 @@ public class CubeController : MonoBehaviour
     [SerializeField] private GameObject cubeModel;
     [SerializeField] private Vector3Data meanPosition;
     private TargetSide _targetSide;
-    public bool isStanding;
+    private bool _isStanding;
     private float _currrentScaleFactor;
     private int _speed;
+    private float _zThresholdForStoppingModification;
 
-    public void InitiateCube(SessionParams sessionParams, TargetSide targetSide, Vector3 originPosition)
+    public bool IsStanding { get => _isStanding;  }
+
+    public void InitiateCube(SessionParams sessionParams, TargetSide targetSide)
     {
         StartCoroutine(DestroyCube());
         _targetSide = targetSide;
-        isStanding = sessionParams.isStanding;
+        _isStanding = sessionParams.isStanding;
         _speed = sessionParams.speed;
+        _zThresholdForStoppingModification = sessionParams.zThresholdInMetres;
         _currrentScaleFactor = RescaleCube(sessionParams.cubeScaleDecimeters);
-        RepositionCube(originPosition, targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : -sessionParams.leftOffsetCentimeters);
+        RepositionCube( (float) sessionParams.spawnHeightDecimetres / 10, sessionParams.spawningDistanceMetres, targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : -sessionParams.leftOffsetCentimeters);
         Debug.Log("*************Velocity: " + new Vector3(0, 0, -sessionParams.speed));
     }
 
-    private void RepositionCube(Vector3 originPosition, int XOffsetInCentimeters)
+    private void RepositionCube(float originY, float originZ, int XOffsetInCentimeters)
     {
-        transform.position = new Vector3(meanPosition.value.x + (float)XOffsetInCentimeters / 100, 0, 0)
-            + new Vector3(0, originPosition.y, originPosition.z);
+        var startingX = _isStanding ? Camera.main.transform.position.x : meanPosition.value.x;
+        transform.position = new Vector3( startingX + (float)XOffsetInCentimeters / 100, 0, 0)
+            + new Vector3(0, originY, originZ);
         var offsetDirection = XOffsetInCentimeters > 0 ? 1 : -1;
         cubeModel.transform.localPosition += new Vector3(_currrentScaleFactor / 2, 0, 0) * offsetDirection;
     }
@@ -47,9 +52,17 @@ public class CubeController : MonoBehaviour
 
     void Update()
     {
-        transform.position += _speed * Time.deltaTime * -transform.forward;
+        transform.position = GetUpdatedPosition();
     }
 
+    private Vector3 GetUpdatedPosition()
+    {
+        var delta = _speed* Time.deltaTime * -transform.forward;
+        var newPos = transform.position + delta;
+        if (_isStanding && transform.position.z > _zThresholdForStoppingModification) newPos.x = Camera.main.transform.position.x;
+        return newPos;
+
+    }
     private void OnCubeHitPlayer()
     {
 
