@@ -9,6 +9,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private float _getCurrentSessionFromServerInterval;
     [SerializeField] private string _hTTPGetCurrentSessionRequestURL;
     [SerializeField] private string _hTTPEndSessionRequestURL;
+    [SerializeField] private int _scoreIncrementOnDodge;
 
     public int SessionStartDelay { get => _sessionStartDelay; }
     public int CalibrationTime{ get => _calibrationTime; }
@@ -16,4 +17,5 @@ public class GameConfig : ScriptableObject
     public float GetCurrentSessionFromServerInterval { get => _getCurrentSessionFromServerInterval; }
     public string HTTPGetCurrentSessionRequestURL { get => _hTTPGetCurrentSessionRequestURL; }
     public string HTTPEndSessionRequestURL { get => _hTTPEndSessionRequestURL; }
+    public int ScoreIncrementOnDodge { get => _scoreIncrementOnDodge;  }
 }

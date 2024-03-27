@@ -1831,6 +1831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fba86896bccc174e8526b5d3fa64097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: {fileID: 11400000, guid: 9a2bc007734d2de4793ddd2bf27519c7, type: 2}
 --- !u!1 &1557168076
 GameObject:
   m_ObjectHideFlags: 0
@@ -2347,6 +2348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de890a51b18d10459b98cfcf210fc43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreText: {fileID: 863737057}
+  score: {fileID: 11400000, guid: 9a2bc007734d2de4793ddd2bf27519c7, type: 2}
 --- !u!4 &1864580772 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2218496723442559053, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -2361,6 +2364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2113528724}
+  - component: {fileID: 2113528725}
   m_Layer: 0
   m_Name: Score Manager
   m_TagString: Untagged
@@ -2383,3 +2387,17 @@ Transform:
   m_Father: {fileID: 862258039}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2113528725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2113528723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3939fe49037bbfd4fbc15144e6dd8a7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  score: {fileID: 11400000, guid: 9a2bc007734d2de4793ddd2bf27519c7, type: 2}
+  gameConfig: {fileID: 11400000, guid: d4b50c0e06680284abc7b8ed4912eccb, type: 2}

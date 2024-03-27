@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class ScoreUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] TMPro.TextMeshProUGUI scoreText;
+    [SerializeField] IntegerData score;
+    private void Update()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        scoreText.text = score.value.ToString();
     }
 }

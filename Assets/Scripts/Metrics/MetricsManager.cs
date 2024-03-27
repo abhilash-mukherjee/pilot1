@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MetricsManager : MonoBehaviour
 {
+    [SerializeField] private IntegerData score;
+
     private int _leftCubes, _rightCubes, _leftDodges, _rightDodges, _leftHits, _rightHits;
 
     private void OnEnable()
@@ -22,7 +24,8 @@ public class MetricsManager : MonoBehaviour
     {
         Debug.Log($"Session Ended. \n Report: \ntotal cubes: {_leftCubes + _rightCubes}, Left cubes: {_leftCubes},  Right cubes: {_rightCubes} " +
             $"\ntotal Hits: {_leftHits + _rightHits}, Left Hits: {_leftHits},  Right Hits: {_rightHits}" +
-            $"\ntotal Dodges: {_leftDodges + _rightDodges}, Left Dodges: {_leftDodges},  Right Dodges: {_rightDodges}");
+            $"\ntotal Dodges: {_leftDodges + _rightDodges}, Left Dodges: {_leftDodges},  Right Dodges: {_rightDodges} " +
+            $"\nScore = {score.value}");
     }
 
     private void RecordMetrics(TargetSide side, EventType eventType)
@@ -41,8 +44,6 @@ public class MetricsManager : MonoBehaviour
         }
     }
 }
-
-
 public enum EventType
 {
     HIT,DODGED

@@ -18,3 +18,4 @@ MonoBehaviour:
   _getCurrentSessionFromServerInterval: 6
   _hTTPGetCurrentSessionRequestURL: https://dev-pilot-server.penguinlabs.in/current-session
   _hTTPEndSessionRequestURL: https://dev-pilot-server.penguinlabs.in/end-session
+  _scoreIncrementOnDodge: 50
