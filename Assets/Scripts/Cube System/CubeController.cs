@@ -12,6 +12,7 @@ public class CubeController : MonoBehaviour
     private TargetSide _targetSide;
     private bool _isStanding;
     private float _currrentScaleFactor;
+    private float _xOffset;
     private int _speed;
     private float _zThresholdForStoppingModification;
 
@@ -25,15 +26,16 @@ public class CubeController : MonoBehaviour
         _speed = sessionParams.speed;
         _zThresholdForStoppingModification = sessionParams.zThresholdInMetres;
         _currrentScaleFactor = RescaleCube(sessionParams.cubeScaleDecimeters);
-        RepositionCube( (float) sessionParams.spawnHeightDecimetres / 10, sessionParams.spawningDistanceMetres, targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : sessionParams.leftOffsetCentimeters);
+        _xOffset = (float) (targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : sessionParams.leftOffsetCentimeters) / 100;
+        RepositionCube( (float) sessionParams.spawnHeightDecimetres / 10, sessionParams.spawningDistanceMetres );
         Debug.Log(_targetSide);
     }
 
-    private void RepositionCube(float originY, float originZ, int XOffsetInCentimeters)
+    private void RepositionCube(float originY, float originZ)
     {
         var startingX = _isStanding ? Camera.main.transform.position.x : meanPosition.value.x;
         var offsetDirection = _targetSide == TargetSide.LEFT ? 1 : -1;
-        transform.position = new Vector3( startingX + offsetDirection * (float)XOffsetInCentimeters / 100, 0, 0)
+        transform.position = new Vector3( startingX + offsetDirection * _xOffset, 0, 0)
             + new Vector3(0, originY, originZ);
         cubeModel.transform.localPosition += new Vector3(_currrentScaleFactor / 2, 0, 0) * offsetDirection;
     }
@@ -61,10 +63,17 @@ public class CubeController : MonoBehaviour
     {
         var delta = _speed* Time.deltaTime * -transform.forward;
         var newPos = transform.position + delta;
-        if (_isStanding && transform.position.z > _zThresholdForStoppingModification) newPos.x = Camera.main.transform.position.x;
+        if (_isStanding && transform.position.z > _zThresholdForStoppingModification) newPos.x = GetOffsetedX();
         return newPos;
 
     }
+
+    private float GetOffsetedX()
+    {
+        var offsetDirection = _targetSide == TargetSide.LEFT ? 1 : -1;
+        return Camera.main.transform.position.x + offsetDirection * _xOffset;
+    }
+
     public void OnCubeHitPlayer()
     {
         Debug.Log("Hit");
