@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using System;
+using Unity.XR.CoreUtils;
 
 public class PlayerCalibrator : MonoBehaviour
 {
@@ -35,9 +37,9 @@ public class PlayerCalibrator : MonoBehaviour
         int time = 0;
         while (time < calibrationSecs)
         {
+            yield return new WaitForSecondsRealtime(1);
             _headPositions.Add(Camera.main.transform.position);
             Debug.Log("Positoon colledcted");
-            yield return new WaitForSecondsRealtime(1);
             time++;
         }
         Vector3 playerMeanPosition = Vector3.zero;

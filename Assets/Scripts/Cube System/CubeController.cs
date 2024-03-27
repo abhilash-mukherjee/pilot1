@@ -25,16 +25,16 @@ public class CubeController : MonoBehaviour
         _speed = sessionParams.speed;
         _zThresholdForStoppingModification = sessionParams.zThresholdInMetres;
         _currrentScaleFactor = RescaleCube(sessionParams.cubeScaleDecimeters);
-        RepositionCube( (float) sessionParams.spawnHeightDecimetres / 10, sessionParams.spawningDistanceMetres, targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : -sessionParams.leftOffsetCentimeters);
-        Debug.Log("Velocity: " + new Vector3(0, 0, -sessionParams.speed));
+        RepositionCube( (float) sessionParams.spawnHeightDecimetres / 10, sessionParams.spawningDistanceMetres, targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : sessionParams.leftOffsetCentimeters);
+        Debug.Log(_targetSide);
     }
 
     private void RepositionCube(float originY, float originZ, int XOffsetInCentimeters)
     {
         var startingX = _isStanding ? Camera.main.transform.position.x : meanPosition.value.x;
-        transform.position = new Vector3( startingX + (float)XOffsetInCentimeters / 100, 0, 0)
+        var offsetDirection = _targetSide == TargetSide.LEFT ? 1 : -1;
+        transform.position = new Vector3( startingX + offsetDirection * (float)XOffsetInCentimeters / 100, 0, 0)
             + new Vector3(0, originY, originZ);
-        var offsetDirection = XOffsetInCentimeters > 0 ? 1 : -1;
         cubeModel.transform.localPosition += new Vector3(_currrentScaleFactor / 2, 0, 0) * offsetDirection;
     }
 
