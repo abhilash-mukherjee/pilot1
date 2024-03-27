@@ -24,7 +24,7 @@ public class CubeController : MonoBehaviour
         _zThresholdForStoppingModification = sessionParams.zThresholdInMetres;
         _currrentScaleFactor = RescaleCube(sessionParams.cubeScaleDecimeters);
         RepositionCube( (float) sessionParams.spawnHeightDecimetres / 10, sessionParams.spawningDistanceMetres, targetSide == TargetSide.LEFT ? sessionParams.rightOffsetCentimeters : -sessionParams.leftOffsetCentimeters);
-        Debug.Log("*************Velocity: " + new Vector3(0, 0, -sessionParams.speed));
+        Debug.Log("Velocity: " + new Vector3(0, 0, -sessionParams.speed));
     }
 
     private void RepositionCube(float originY, float originZ, int XOffsetInCentimeters)
@@ -63,17 +63,18 @@ public class CubeController : MonoBehaviour
         return newPos;
 
     }
-    private void OnCubeHitPlayer()
+    public void OnCubeHitPlayer()
     {
-
+        Debug.Log("**********Hit");
     }
 
-    private void OnCubeHitWall()
+    public void OnCubeHitWall()
     {
 
+        Debug.Log("**********Dodged");
     }
+
 }
-
 public enum TargetSide
 {
     LEFT, RIGHT
