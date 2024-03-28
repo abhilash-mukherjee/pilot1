@@ -7,6 +7,8 @@ public class CubeController : MonoBehaviour
 {
     public delegate void CubeCollisionEventHandler(TargetSide side, EventType eventType);
     public static event CubeCollisionEventHandler OnCubeCollided;
+    public delegate void CubeCollisionHandler(GameObject obj);
+    public static event CubeCollisionHandler OnCubeCollidedObject;
     [SerializeField] private GameObject cubeModel;
     [SerializeField] private Vector3Data meanPosition;
     private TargetSide _targetSide;
@@ -77,6 +79,7 @@ public class CubeController : MonoBehaviour
     public void OnCubeHitPlayer()
     {
         Debug.Log("Hit");
+        OnCubeCollidedObject?.Invoke(this.gameObject);
         OnCubeCollided?.Invoke(_targetSide, EventType.HIT);
     }
 
@@ -84,6 +87,7 @@ public class CubeController : MonoBehaviour
     {
 
         Debug.Log("Dodged");
+        OnCubeCollidedObject?.Invoke(this.gameObject);
         OnCubeCollided?.Invoke(_targetSide, EventType.DODGED);
     }
 
