@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubeModel: {fileID: 3688152803754043741}
   meanPosition: {fileID: 11400000, guid: b447a61435e4f534fa0d8a9105e26686, type: 2}
+  isSessionPaused: {fileID: 11400000, guid: cc521cc314030ab49981fec301a24b1e, type: 2}
 --- !u!82 &6410201888128860364
 AudioSource:
   m_ObjectHideFlags: 0

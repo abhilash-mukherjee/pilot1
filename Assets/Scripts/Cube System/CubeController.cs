@@ -11,6 +11,7 @@ public class CubeController : MonoBehaviour
     public static event CubeCollisionHandler OnCubeCollidedObject;
     [SerializeField] private GameObject cubeModel;
     [SerializeField] private Vector3Data meanPosition;
+    [SerializeField] private BoolData isSessionPaused;
     private TargetSide _targetSide;
     private bool _isStanding;
     private float _currrentScaleFactor;
@@ -22,7 +23,6 @@ public class CubeController : MonoBehaviour
 
     public void InitiateCube(SessionParams sessionParams, TargetSide targetSide)
     {
-        StartCoroutine(DestroyCube());
         _targetSide = targetSide;
         _isStanding = sessionParams.isStanding;
         _speed = sessionParams.speed;
@@ -52,13 +52,13 @@ public class CubeController : MonoBehaviour
 
     IEnumerator DestroyCube()
     {
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSecondsRealtime(10f);
         Destroy(gameObject);
     }
 
     void Update()
     {
-        if (_hasHitPlayer) return;
+        if (_hasHitPlayer || isSessionPaused.value == true) return;
         transform.position = GetUpdatedPosition();
     }
 
@@ -83,6 +83,7 @@ public class CubeController : MonoBehaviour
         _hasHitPlayer = true;
         OnCubeCollidedObject?.Invoke(this.gameObject);
         OnCubeCollided?.Invoke(_targetSide, EventType.HIT);
+        StartCoroutine(DestroyCube());
     }
 
     public void OnCubeHitWall()
@@ -91,6 +92,8 @@ public class CubeController : MonoBehaviour
         Debug.Log("Dodged");
         OnCubeCollidedObject?.Invoke(this.gameObject);
         OnCubeCollided?.Invoke(_targetSide, EventType.DODGED);
+        StartCoroutine(DestroyCube());
+
     }
 
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class MetricsManager : MonoBehaviour
 {
     [SerializeField] private IntegerData score;
+    [SerializeField] private SessionMetrics sessionMetrics;
 
     private int _leftCubes, _rightCubes, _leftDodges, _rightDodges, _leftHits, _rightHits;
 
@@ -13,11 +14,23 @@ public class MetricsManager : MonoBehaviour
     {
         CubeController.OnCubeCollided += RecordMetrics;
         SessionManager.OnSessionEnded += SendMetrics;
+        SessionManager.OnNewSessionCreated += ResetMetrics;
     }
     private void OnDisable()
     {
         CubeController.OnCubeCollided -= RecordMetrics;
         SessionManager.OnSessionEnded -= SendMetrics;
+        SessionManager.OnNewSessionCreated -= ResetMetrics;
+    }
+
+    private void ResetMetrics(SessionData data)
+    {
+        _leftCubes = 0;
+        _rightCubes = 0;
+        _leftDodges = 0;
+        _rightDodges = 0;
+        _leftHits = 0;
+        _rightHits = 0;
     }
 
     private void SendMetrics(SessionData data)
@@ -26,6 +39,12 @@ public class MetricsManager : MonoBehaviour
             $"\ntotal Hits: {_leftHits + _rightHits}, Left Hits: {_leftHits},  Right Hits: {_rightHits}" +
             $"\ntotal Dodges: {_leftDodges + _rightDodges}, Left Dodges: {_leftDodges},  Right Dodges: {_rightDodges} " +
             $"\nScore = {score.value}");
+        sessionMetrics.leftCubes = _leftCubes;
+        sessionMetrics.rightCubes = _rightCubes;
+        sessionMetrics.leftDodges = _leftDodges;
+        sessionMetrics.rightDodges = _rightDodges;
+        sessionMetrics.leftHits = _leftHits;
+        sessionMetrics.rightHits = _rightHits;
     }
 
     private void RecordMetrics(TargetSide side, EventType eventType)

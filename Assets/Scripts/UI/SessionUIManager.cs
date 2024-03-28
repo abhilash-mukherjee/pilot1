@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class SessionUIManager : MonoBehaviour
 {
-    [SerializeField]
-    TMPro.TextMeshProUGUI sessionStartTextUI;
 
     [SerializeField]
-    private GameObject StartUIHolder, EndUIHolder, ScoreUIHolder, TimerUIHolder;
+    private SessionUISuperClass sessionStartUI, gameplayUI, endUI;
+    [SerializeField] private Sprite pausedSprite, playingSprite;
+    [SerializeField] private UnityEngine.UI.Image image;
+
 
     [SerializeField]
     private GameConfig gameConfig;
@@ -18,61 +19,67 @@ public class SessionUIManager : MonoBehaviour
 
     private void Start()
     {
-        sessionStartTextUI.text = "Waiting for new session to start";
-        StartUIHolder.SetActive(true);
+        sessionStartUI.ShowUI(null);
     }
     private void OnEnable()
     {
         SessionManager.OnNewSessionCreated += NewSessionCreated;
         SessionManager.OnSessionEnded += SessionEnded;
+        SessionManager.OnSessionPaused += PauseUI;
+        SessionManager.OnSessionResumed += ResumeUI;
     }
     
     private void OnDisable()
     {
         SessionManager.OnNewSessionCreated -= NewSessionCreated;
         SessionManager.OnSessionEnded -= SessionEnded;
+        SessionManager.OnSessionPaused -= PauseUI;
+        SessionManager.OnSessionResumed -= ResumeUI;
     }
 
+    private void PauseUI(SessionData data)
+    {
+        image.sprite = pausedSprite;
+    }
 
+    private void ResumeUI(SessionData data)
+    {
+        image.sprite = playingSprite;
+    }
     private void NewSessionCreated(SessionData data)
     {
         _currentSessionData = data;
-        sessionStartTextUI.text = $"New session created. /n code: {_currentSessionData.code} /n module: {_currentSessionData.module}";
-        StartUIHolder.SetActive(true);
-        EndUIHolder.SetActive(false);
-        ScoreUIHolder.SetActive(false);
-        TimerUIHolder.SetActive(false);
+        sessionStartUI.ShowUI(data);
+        endUI.HideUI(_currentSessionData);
+        gameplayUI.HideUI(data);
+        image.sprite = playingSprite;
         StopAllCoroutines();
         StartCoroutine(GameplayStarted());
     }
 
     IEnumerator GameplayStarted()
     {
-        yield return new WaitForSeconds(gameConfig.SessionStartDelay); 
-        StartUIHolder.SetActive(false);
-        EndUIHolder.SetActive(false);
-        ScoreUIHolder.SetActive(true);
-        TimerUIHolder.SetActive(true);
+        yield return new WaitForSeconds(gameConfig.SessionStartDelay);
+        sessionStartUI.HideUI(_currentSessionData);
+        endUI.HideUI(_currentSessionData);
+        gameplayUI.ShowUI(_currentSessionData);
     }
 
     private void SessionEnded(SessionData data)
     {
         _currentSessionData = null;
-        StartUIHolder.SetActive(false);
-        ScoreUIHolder.SetActive(false);
-        TimerUIHolder.SetActive(false);
-        EndUIHolder.SetActive(true);
+        sessionStartUI.HideUI(null);
+        gameplayUI.HideUI(_currentSessionData);
+        endUI.ShowUI(_currentSessionData);
         StopAllCoroutines();
-        StartCoroutine(GameplayEnded());
+        StartCoroutine(ResetUI());
     }
 
-    IEnumerator GameplayEnded()
+    IEnumerator ResetUI()
     {
         yield return new WaitForSeconds(gameConfig.PostSessionEndResetTime);
-        EndUIHolder.SetActive(false);
-        StartUIHolder.SetActive(true);
-        ScoreUIHolder.SetActive(false);
-        TimerUIHolder.SetActive(false);
-        sessionStartTextUI.text = "Waiting for new session to start";
+        endUI.HideUI(_currentSessionData);
+        sessionStartUI.ShowUI(null);
+        gameplayUI.HideUI(_currentSessionData);
     }
 }

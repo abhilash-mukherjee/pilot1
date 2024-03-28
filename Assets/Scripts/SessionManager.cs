@@ -12,6 +12,9 @@ public class SessionManager : MonoBehaviour
     [SerializeField]
     private GameConfig gameConfig;
 
+    [SerializeField]
+    private BoolData isSessionPaused;
+
     private SessionData _sessionData;
 
     void Start()
@@ -25,7 +28,7 @@ public class SessionManager : MonoBehaviour
     {
         TimerManager.OnTimerEnd += TimerEnd;
     }
-    
+
     private void OnDisable()
     {
         TimerManager.OnTimerEnd -= TimerEnd;
@@ -99,6 +102,7 @@ public class SessionManager : MonoBehaviour
                     {
                         _sessionData = responseData.sessionData;
                         OnNewSessionCreated?.Invoke(_sessionData);
+                        isSessionPaused.value = false;
                         Debug.Log($"New Session: {_sessionData.code}; CREATED");
                         if (_sessionData.sessionStatus == "PAUSED")
                         {
@@ -127,7 +131,7 @@ public class SessionManager : MonoBehaviour
                     Debug.Log("Mega Log:\n" +
                                 "Received: " + webRequest.downloadHandler.text + "\n" +
                                 "Module: " + responseData.sessionData.module + "\n" +
-                                "Code: " + responseData.sessionData.code + "\n" 
+                                "Code: " + responseData.sessionData.code + "\n"
                              );
 
 
@@ -146,12 +150,14 @@ public class SessionManager : MonoBehaviour
     private void ResumeSession()
     {
         _sessionData.sessionStatus = "RUNNING";
+        isSessionPaused.value = false;
         OnSessionResumed?.Invoke(_sessionData);
         Debug.Log($"Session: {_sessionData.code}; RESUMED");
     }
 
     private void PauseSession()
     {
+        isSessionPaused.value = true;
         _sessionData.sessionStatus = "PAUSED";
         OnSessionPaused?.Invoke(_sessionData);
         Debug.Log($"Session: {_sessionData.code}; PAUSED");
