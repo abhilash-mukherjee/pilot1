@@ -11,7 +11,6 @@ public class SessionStartUI : SessionUISuperClass
     [SerializeField] private Image timerImage;
     [SerializeField] private int timerAnimationTime;
     [SerializeField] private AudioSource sessionStartAudio;
-    [SerializeField] private AudioSource source;
 
     private int _totalTime;
 
@@ -28,7 +27,6 @@ public class SessionStartUI : SessionUISuperClass
         else
         {
             textMessage.text = waitingForSessionMessage;
-            source.Play();
         }
     }
 
@@ -36,8 +34,6 @@ public class SessionStartUI : SessionUISuperClass
     {
         uiObjectReference.SetActive(false);
         timerImage.fillAmount = 1f;
-        source.Pause();
-
     }
 
     public void AnimateTimer(int seconds)

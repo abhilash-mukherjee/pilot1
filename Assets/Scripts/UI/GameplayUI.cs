@@ -4,7 +4,6 @@ public class GameplayUI : SessionUISuperClass
 {
     [SerializeField] private GameObject uiReference;
     [SerializeField] private UnityEngine.UI.Image timerImage;
-    [SerializeField] private AudioSource source;
 
     private int totalDuration; 
 
@@ -27,7 +26,6 @@ public class GameplayUI : SessionUISuperClass
     {
         uiReference.SetActive(false);
         totalDuration = 0;
-        source.Pause();
     }
 
     public override void ShowUI(SessionData data)
@@ -37,7 +35,6 @@ public class GameplayUI : SessionUISuperClass
         if (data != null && data.sessionParams != null)
         {
             totalDuration = data.sessionParams.duration;
-            source.Play();
         }
     }
 }

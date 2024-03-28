@@ -7,25 +7,23 @@ public class EndSessionUI : SessionUISuperClass
     [SerializeField] private SessionMetrics metrics;
     [SerializeField] private IntegerData score;
     [SerializeField] private GameObject uiObjectReference;
-    [SerializeField] private AudioSource source;
+    [SerializeField] private float uiDisplayDelay;
 
     public override void HideUI(SessionData data)
     {
         uiObjectReference.SetActive(false);
-        source.Pause();
         SetUIState(false);
     }
 
     public override void ShowUI(SessionData data)
     {
-        source.Play();
-        uiObjectReference.SetActive(true);
-        StartCoroutine(DisplayMetrics(0.1f));
+        StartCoroutine(UIDisplayCoroutine(uiDisplayDelay));
     }
 
-    IEnumerator DisplayMetrics(float delay)
+    IEnumerator UIDisplayCoroutine(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
+        uiObjectReference.SetActive(true);
         SetUIState(true);
         leftCubes.text = metrics.leftCubes.ToString();
         rightCubes.text = metrics.rightCubes.ToString();
