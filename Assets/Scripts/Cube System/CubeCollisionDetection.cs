@@ -27,6 +27,10 @@ public class CubeCollisionDetection : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             _hasHitPlayer = true;
+            GetComponent<Collider>().isTrigger = false;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.velocity = new Vector3(0, 0, -10);
             cubeController.OnCubeHitPlayer();
         }
 

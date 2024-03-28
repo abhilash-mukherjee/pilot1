@@ -17,7 +17,7 @@ public class CubeController : MonoBehaviour
     private float _xOffset;
     private int _speed;
     private float _zThresholdForStoppingModification;
-
+    private bool _hasHitPlayer;
     public bool IsStanding { get => _isStanding;  }
 
     public void InitiateCube(SessionParams sessionParams, TargetSide targetSide)
@@ -58,6 +58,7 @@ public class CubeController : MonoBehaviour
 
     void Update()
     {
+        if (_hasHitPlayer) return;
         transform.position = GetUpdatedPosition();
     }
 
@@ -79,6 +80,7 @@ public class CubeController : MonoBehaviour
     public void OnCubeHitPlayer()
     {
         Debug.Log("Hit");
+        _hasHitPlayer = true;
         OnCubeCollidedObject?.Invoke(this.gameObject);
         OnCubeCollided?.Invoke(_targetSide, EventType.HIT);
     }
