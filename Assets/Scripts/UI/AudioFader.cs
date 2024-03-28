@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class AudioFader : MonoBehaviour
@@ -13,11 +14,18 @@ public class AudioFader : MonoBehaviour
     private void OnEnable()
     {
         CubeController.OnCubeCollidedObject += Collided;
+        SessionManager.OnSessionEnded += SessionEnded;
     }
     
     private void OnDisable()
     {
         CubeController.OnCubeCollidedObject -= Collided;
+        SessionManager.OnSessionEnded -= SessionEnded;
+    }
+
+    private void SessionEnded(SessionData data)
+    {
+        FadeAudio();
     }
 
     private void Collided(GameObject obj)
