@@ -44,7 +44,7 @@ public class TimerManager : MonoBehaviour
 
     private void SessionPaused(SessionData data)
     {
-        if (data.code != _currentSessionData.code)
+        if (data.id != _currentSessionData.id)
         {
             Debug.Log("A new session is paused while old timer running");
             _currentSessionData = data;
@@ -56,7 +56,7 @@ public class TimerManager : MonoBehaviour
 
     private void SessionResumed(SessionData data)
     {
-        if (data.code != _currentSessionData.code)
+        if (data.id != _currentSessionData.id)
         {
             Debug.Log("A new session is trying to be resumed while old timer running");
             _currentSessionData = data;

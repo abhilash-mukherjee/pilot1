@@ -36,9 +36,9 @@ public class SessionManager : MonoBehaviour
 
     private void TimerEnd(SessionData data)
     {
-        if (data.code != _sessionData.code) return;
+        if (data.id != _sessionData.id) return;
         EndSession();
-        PostRequest(gameConfig.HTTPEndSessionRequestURL, "{ \"secret\": \"fyftyfytfy\"}");
+        PostRequest(gameConfig.HTTPEndSessionRequestURL);
     }
 
     IEnumerator RecursiveCoroutine()
@@ -48,19 +48,21 @@ public class SessionManager : MonoBehaviour
         yield return StartCoroutine(RecursiveCoroutine());
     }
 
-    void PostRequest(string uri, string body)
+    void PostRequest(string uri)
     {
         var webRequest = new UnityWebRequest(uri, "POST");
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(body);
-        webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
         webRequest.downloadHandler = new DownloadHandlerBuffer();
 
-        webRequest.SendWebRequest().completed += (op) => { ProcessData(webRequest); };
+        // Add the required header
+        webRequest.SetRequestHeader("unity-client-secret", gameConfig.Secret);
+
+        webRequest.SendWebRequest();
     }
 
     void GetRequest(string uri)
     {
         var webRequest = UnityWebRequest.Get(uri);
+        webRequest.SetRequestHeader("unity-client-secret", gameConfig.Secret);
         webRequest.SendWebRequest().completed += (op) => { ProcessData(webRequest); };
 
     }
@@ -84,9 +86,9 @@ public class SessionManager : MonoBehaviour
                     ResponseData responseData = JsonUtility.FromJson<ResponseData>(webRequest.downloadHandler.text);
 
                     //Ongoing Session Ended
-                    if (responseData.sessionData == null || string.IsNullOrEmpty(responseData.sessionData.code))
+                    if (responseData.sessionData == null || string.IsNullOrEmpty(responseData.sessionData.id))
                     {
-                        if (!string.IsNullOrEmpty(_sessionData.code))
+                        if (!string.IsNullOrEmpty(_sessionData.id))
                         {
                             EndSession();
                         }
@@ -98,13 +100,16 @@ public class SessionManager : MonoBehaviour
                     }
 
                     //New session detected
-                    else if (!string.IsNullOrEmpty(responseData.sessionData.code) && string.IsNullOrEmpty(_sessionData.code))
+                    else if (!string.IsNullOrEmpty(responseData.sessionData.id) && string.IsNullOrEmpty(_sessionData.id)
+                        && responseData.sessionData.status == "NOT_STARTED")
                     {
                         _sessionData = responseData.sessionData;
+                        _sessionData.status = "RUNNING";
+                        PostRequest(gameConfig.HTTPStartSessionRequestURL);
                         OnNewSessionCreated?.Invoke(_sessionData);
                         isSessionPaused.value = false;
-                        Debug.Log($"New Session: {_sessionData.code}; CREATED");
-                        if (_sessionData.sessionStatus == "PAUSED")
+                        Debug.Log($"New Session: {_sessionData.id}; CREATED");
+                        if (_sessionData.status == "PAUSED")
                         {
                             PauseSession();
                         }
@@ -112,18 +117,18 @@ public class SessionManager : MonoBehaviour
 
 
                     //Session paused or resumed
-                    else if (responseData.sessionData.code == _sessionData.code)
+                    else if (responseData.sessionData.id == _sessionData.id)
                     {
-                        if (responseData.sessionData.sessionStatus == "PAUSED" && _sessionData.sessionStatus == "RUNNING")
+                        if (responseData.sessionData.status == "PAUSED" && _sessionData.status == "RUNNING")
                         {
                             PauseSession();
                         }
-                        else if (responseData.sessionData.sessionStatus == "RUNNING" && _sessionData.sessionStatus == "PAUSED")
+                        else if (responseData.sessionData.status == "RUNNING" && _sessionData.status == "PAUSED")
                         {
                             ResumeSession();
                         }
                     }
-                    else if (responseData.sessionData.code != _sessionData.code)
+                    else if (responseData.sessionData.id != _sessionData.id)
                     {
                         Debug.LogError("A different session request sent while this session is running.");
                     }
@@ -131,7 +136,7 @@ public class SessionManager : MonoBehaviour
                     Debug.Log("Mega Log:\n" +
                                 "Received: " + webRequest.downloadHandler.text + "\n" +
                                 "Module: " + responseData.sessionData.module + "\n" +
-                                "Code: " + responseData.sessionData.code + "\n"
+                                "Code: " + responseData.sessionData.id + "\n"
                              );
 
 
@@ -143,31 +148,31 @@ public class SessionManager : MonoBehaviour
     private void EndSession()
     {
         OnSessionEnded?.Invoke(_sessionData);
-        Debug.Log($"Session: {_sessionData.code}; ENDED");
+        Debug.Log($"Session: {_sessionData.id}; ENDED");
         ResetSessionData();
     }
 
     private void ResumeSession()
     {
-        _sessionData.sessionStatus = "RUNNING";
+        _sessionData.status = "RUNNING";
         isSessionPaused.value = false;
         OnSessionResumed?.Invoke(_sessionData);
-        Debug.Log($"Session: {_sessionData.code}; RESUMED");
+        Debug.Log($"Session: {_sessionData.id}; RESUMED");
     }
 
     private void PauseSession()
     {
         isSessionPaused.value = true;
-        _sessionData.sessionStatus = "PAUSED";
+        _sessionData.status = "PAUSED";
         OnSessionPaused?.Invoke(_sessionData);
-        Debug.Log($"Session: {_sessionData.code}; PAUSED");
+        Debug.Log($"Session: {_sessionData.id}; PAUSED");
     }
 
     private void ResetSessionData()
     {
-        _sessionData.code = "";
+        _sessionData.id = "";
         _sessionData.sessionParams = null;
-        _sessionData.sessionStatus = "";
+        _sessionData.status = "";
         _sessionData.module = "";
     }
 }

@@ -3973,6 +3973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: {fileID: 11400000, guid: 9a2bc007734d2de4793ddd2bf27519c7, type: 2}
   sessionMetrics: {fileID: 11400000, guid: bb876e1ef2f04ed45914ea46ff44a037, type: 2}
+  gameConfig: {fileID: 11400000, guid: d4b50c0e06680284abc7b8ed4912eccb, type: 2}
 --- !u!1 &1318115598
 GameObject:
   m_ObjectHideFlags: 0

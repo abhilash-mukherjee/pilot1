@@ -22,9 +22,9 @@ public class SessionParams
 public class SessionData
 {
     public string module;
-    public string code;
+    public string id;
     public SessionParams sessionParams;
-    public string sessionStatus;
+    public string status;
 }
 
 [System.Serializable]

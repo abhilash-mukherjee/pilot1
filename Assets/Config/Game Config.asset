@@ -16,6 +16,9 @@ MonoBehaviour:
   _calibrationTime: 10
   _postSessionEndResetTime: 20
   _getCurrentSessionFromServerInterval: 6
-  _hTTPGetCurrentSessionRequestURL: https://dev-pilot-server.penguinlabs.in/current-session
-  _hTTPEndSessionRequestURL: https://dev-pilot-server.penguinlabs.in/end-session
+  _hTTPGetCurrentSessionRequestURL: https://dev-server.penguinlabs.in/unity-client/current-session/
+  _hTTPEndSessionRequestURL: https://dev-server.penguinlabs.in/unity-client/end-session/
+  _hTTPStartSessionRequestURL: https://dev-server.penguinlabs.in/unity-client/start-session/
+  _hTTPSendMetricsRequestURL: https://dev-server.penguinlabs.in/unity-client/metrics/
   _scoreIncrementOnDodge: 50
+  _secret: thisIsASecret4550928##hashedforgood
