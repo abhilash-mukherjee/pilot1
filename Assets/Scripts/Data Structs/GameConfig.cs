@@ -13,6 +13,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private string _hTTPSendMetricsRequestURL;
     [SerializeField] private int _scoreIncrementOnDodge;
     [SerializeField] private string _secret;
+    [SerializeField] private string _module;
 
     public int SessionStartDelay { get => _sessionStartDelay; }
     public int CalibrationTime{ get => _calibrationTime; }
@@ -24,4 +25,5 @@ public class GameConfig : ScriptableObject
     public string HTTPSendMetricsRequestURL { get => _hTTPSendMetricsRequestURL; }
     public int ScoreIncrementOnDodge { get => _scoreIncrementOnDodge;  }
     public string Secret { get => _secret; }
+    public string Module { get => _module; }
 }

@@ -101,7 +101,7 @@ public class SessionManager : MonoBehaviour
 
                     //New session detected
                     else if (!string.IsNullOrEmpty(responseData.sessionData.id) && string.IsNullOrEmpty(_sessionData.id)
-                        && responseData.sessionData.status == "NOT_STARTED")
+                        && responseData.sessionData.status == "NOT_STARTED" && responseData.sessionData.module == gameConfig.Module)
                     {
                         _sessionData = responseData.sessionData;
                         _sessionData.status = "RUNNING";
@@ -128,6 +128,12 @@ public class SessionManager : MonoBehaviour
                             ResumeSession();
                         }
                     }
+
+                    else if (responseData.sessionData.module != gameConfig.Module)
+                    {
+                        Debug.LogError("Current session is of a different module");
+                    }
+
                     else if (responseData.sessionData.id != _sessionData.id)
                     {
                         Debug.LogError("A different session request sent while this session is running.");
