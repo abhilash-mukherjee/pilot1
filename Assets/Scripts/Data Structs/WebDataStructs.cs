@@ -8,6 +8,7 @@ public class SessionParams
     public int duration;
     public int cubeGap;
     public int speed;
+    public int environment;
     public string targetSide;
     public int rightOffsetCentimeters;
     public int leftOffsetCentimeters;
